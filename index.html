@@ -6,7 +6,18 @@
 	<title>Arcade Games</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="theme-color" content="#000">
-	<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+	<!-- font css -->
+	<style>
+		@font-face {
+			font-family: 'Press Start 2P';
+			font-style: normal;
+			font-weight: 400;
+			font-display: swap;
+			src: url('./PressStart2P.woff2') format('woff2');
+		}
+	</style>
+
+	<!-- regular css -->
 	<style>
 		* {
 			margin: 0;
@@ -337,17 +348,18 @@
 				</div>
 			</a>
 
-            <a href="./game.html?g=Maze" class="game-card" style="--card-color: var(--cyan);">
-                <div class="card-row">
-                    <div class="game-num">03</div>
-                    <div class="divider"></div>
-                    <div class="card-text">
-                        <div class="game-title">MAZE</div>
-                        <div class="game-desc">GUIDE A TURTLE THROUGH A MAZE. DODGE PLASTIC BAGS, COLLECT STRAWS, ESCAPE</div>
-                    </div>
-                    <div class="play-tag">START</div>
-                </div>
-            </a>
+			<a href="./game.html?g=Maze" class="game-card" style="--card-color: var(--cyan);">
+				<div class="card-row">
+					<div class="game-num">03</div>
+					<div class="divider"></div>
+					<div class="card-text">
+						<div class="game-title">MAZE</div>
+						<div class="game-desc">GUIDE A TURTLE THROUGH A MAZE. DODGE PLASTIC BAGS, COLLECT STRAWS, ESCAPE
+						</div>
+					</div>
+					<div class="play-tag">START</div>
+				</div>
+			</a>
 
 			<!-- add more games:
             <a href="./GameName/" class="game-card" style="--card-color: var(--cyan);">
