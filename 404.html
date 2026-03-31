@@ -137,34 +137,30 @@
             GAME NOT FOUND<br>
             <span class="blink">PRESS CONTINUE TO RETURN</span>
         </div>
-        <a href="../" class="home-link">CONTINUE</a>
+        <a href="./" class="home-link" id="home-link">CONTINUE</a>
     </div>
 
     <script>
         (function () {
             var path = location.pathname.split('/').filter(Boolean);
             var game = path[path.length - 1];
+            var base = path.slice(0, -1).join('/');
+            base = '/' + (base ? base + '/' : '');
 
-            // not a game path, go home
             if (!game || game.indexOf('.') !== -1) {
-                location.replace('./');
+                location.replace(base);
                 return;
             }
-
-            // check if game exists by fetching its binary
-            var base = location.pathname.substring(0, location.pathname.lastIndexOf('/' + game + '/') + 1);
-            if (!base) base = '../';
 
             var xhr = new XMLHttpRequest();
             xhr.open('HEAD', base + game + '/binary.js', true);
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {
                     if (xhr.status === 200) {
-                        // game exists, redirect to player
                         location.replace(base + 'game.html?g=' + game);
                     } else {
-                        // game doesn't exist, show 404
                         document.getElementById('error').className = 'error-page visible';
+                        document.getElementById('home-link').href = base;
                     }
                 }
             };
