@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Maze</title>
+    <title>Loading...</title>
     <meta name="description" content="A MakeCode Arcade game" />
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -107,7 +107,14 @@
     </iframe>
     <div id="fullscreen">⇲</div>
     <script>
-        makeCodeRun({ js: "./binary.js", simUrl: "../simulator/index.html" });
+        var game = new URLSearchParams(location.search).get('g');
+        if (!game) location.href = './';
+        document.title = game;
+        var base = location.pathname.substring(0, location.pathname.lastIndexOf('/') + 1);
+        var binPath = base + game + '/binary.js';
+        var simPath = base + 'simulator/index.html';
+        makeCodeRun({ js: binPath, simUrl: simPath });
+        history.replaceState(null, '', base + game + '/');
     </script>
 </body>
 
