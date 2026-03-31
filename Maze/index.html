@@ -1,15 +1,21 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
-    <script type="text/javascript" src="./js/loader.js"></script>
-    <script type="text/javascript" src="./js/custom.js"></script>
+    <title>Maze</title>
+    <meta name="description" content="A MakeCode Arcade game" />
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#000">
+    <script src="../loader.js"></script>
     <style>
         body {
             background: black;
             color: white;
             font-family: monospace;
             overflow: hidden;
+            margin: 0;
             font-size: 14pt;
         }
 
@@ -21,18 +27,19 @@
             height: 100%;
             border: none;
         }
+
         #fullscreen {
             position: absolute;
             right: 0.25rem;
             bottom: 0;
             cursor: pointer;
         }
+
         .lds-ripple {
             width: 80px;
             height: 80px;
             margin: auto;
             position: absolute;
-            margin: auto;
             top: 0;
             right: 0;
             bottom: 0;
@@ -99,8 +106,9 @@
         sandbox="allow-popups allow-forms allow-scripts allow-same-origin">
     </iframe>
     <div id="fullscreen">⇲</div>
-    <script type="text/javascript">
-makeCodeRun({ js: "./js/binary.js"})
-        </script>
+    <script>
+        makeCodeRun({ js: "./binary.js", simUrl: "../simulator/index.html" });
+    </script>
 </body>
+
 </html>
