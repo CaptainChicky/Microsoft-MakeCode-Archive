@@ -1,6 +1,6 @@
 {
-    "name": "Collect",
-    "description": "A simple arcade collection game",
+    "name": "Galaga ",
+    "description": "Shoot asteroids as a dinosaur",
     "dependencies": {
         "device": "*"
     },

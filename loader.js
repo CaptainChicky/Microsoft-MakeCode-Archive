@@ -43,7 +43,7 @@ function makeCodeRun(options) {
             })
             // always load local simulator
             document.getElementById("simframe")
-                .setAttribute("src", "./simulator/index.html");
+                .setAttribute("src", options.simUrl || "./simulator/index.html");
             initFullScreen();
         })
     }

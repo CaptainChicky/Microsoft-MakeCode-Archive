@@ -1,0 +1,19 @@
+{
+    "name": "Collect",
+    "description": "A simple collecting game",
+    "dependencies": {
+        "device": "*"
+    },
+    "files": [
+        "main.ts"
+    ],
+    "testFiles": [],
+    "targetVersions": {
+        "target": "1.8.22",
+        "targetId": "arcade"
+    },
+    "supportedTargets": [
+        "arcade"
+    ],
+    "preferredEditor": "tsprj"
+}
