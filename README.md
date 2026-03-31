@@ -57,11 +57,12 @@ GameName/index.html
 npm install -g pxt
 cd Collect            # or Galaga, etc.
 pxt target arcade@1.8.22
+Rename-Item .\node_modules\pxt-arcade pxt-arcade@1.8.22
 pxt install
 pxt build --cloud
-cp built/binary.js .
+cp built/debug/binary.js .
 ```
-This outputs a new `built/binary.js` — copy it to `assets/binary.js`, then run `npx http-server . -c-1` to serve the updated game locally.
+
 To test locally, go back to the repo root and serve:
 
 ```bash

@@ -2,6 +2,7 @@ node_modules/
 built/
 .DS_Store
 pxt_modules/
-assets/binary.js
+binary.js
 package-lock.json
 package.json
+tsconfig.json

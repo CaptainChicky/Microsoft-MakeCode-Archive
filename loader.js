@@ -41,7 +41,7 @@ function makeCodeRun(options) {
                     console.log("Failed to parse meta, using defaults");
                 }
             })
-            // always load local simulator
+            // load simulator from provided path or default
             document.getElementById("simframe")
                 .setAttribute("src", options.simUrl || "./simulator/index.html");
             initFullScreen();
