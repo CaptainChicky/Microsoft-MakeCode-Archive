@@ -55,10 +55,17 @@ GameName/index.html
 
 ```bash
 npm install -g pxt
-cd Collect            # or Galaga, etc.
+cd Collect            # or Galaga, Maze etc.
 pxt target arcade@1.8.22
 Rename-Item .\node_modules\pxt-arcade pxt-arcade@1.8.22
 pxt install
+pxt build --cloud
+cp built/debug/binary.js .
+```
+
+If you already have everything set up, just
+```bash
+cd Collect          # or Galaga, Maze etc.
 pxt build --cloud
 cp built/debug/binary.js .
 ```

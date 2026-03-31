@@ -1,0 +1,20 @@
+{
+    "name": "Maze",
+    "description": "A maze puzzle game",
+    "dependencies": {
+        "device": "*",
+        "color-coded-tilemap": "*"
+    },
+    "files": [
+        "main.ts"
+    ],
+    "testFiles": [],
+    "targetVersions": {
+        "target": "1.8.22",
+        "targetId": "arcade"
+    },
+    "supportedTargets": [
+        "arcade"
+    ],
+    "preferredEditor": "tsprj"
+}
