@@ -21,10 +21,43 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install PXT
+        run: npm install -g pxt
+
+      - name: Build games
+        run: | # this would need to be updated for each new game that's added (aka never)
+          for game in Collect Galaga Maze; do
+            echo "=== Building $game ==="
+            cd $game
+            pxt target arcade@1.8.22
+            mv node_modules/pxt-arcade node_modules/pxt-arcade@1.8.22
+            pxt install
+            pxt build --cloud
+            cp built/debug/binary.js .
+            cd ..
+          done
+
+      - name: Assemble deploy directory
+        run: |
+          mkdir _site
+          cp index.html game.html 404.html loader.js PressStart2P.woff2 _site/
+          cp -r simulator _site/simulator
+          for game in Collect Galaga Maze; do
+            mkdir _site/$game
+            cp $game/binary.js _site/$game/
+          done
+
       - uses: actions/configure-pages@v4
+
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
+          path: '_site'
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
