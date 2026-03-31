@@ -70,8 +70,6 @@ cd ..
 npx http-server . -c-1
 ```
 
-Then open `http://localhost:8080/Collect/` or `http://localhost:8080/Galaga/`.
-
 ## Simulator files
 
 The `simulator/` folder contains a local mirror of MakeCode Arcade's simulator runtime. These files are downloaded from MakeCode's CDN and shared across all games:

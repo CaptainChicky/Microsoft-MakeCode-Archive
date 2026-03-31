@@ -173,6 +173,7 @@ game.onUpdateInterval(2000, function () {
    `, SpriteKind.ImmortalBoss)
     MySprite4.setPosition(153, Math.randomRange(0, 120))
     MySprite4.setVelocity(-275, 0)
+    MySprite4.setFlag(SpriteFlag.AutoDestroy, true)
 })
 game.onUpdateInterval(5000, function () {
     mySprite3 = sprites.create(img`
@@ -195,6 +196,7 @@ game.onUpdateInterval(5000, function () {
    `, SpriteKind.Food)
     mySprite3.setPosition(153, Math.randomRange(0, 120))
     mySprite3.setVelocity(-150, 0)
+    mySprite3.setFlag(SpriteFlag.AutoDestroy, true)
 })
 game.onUpdateInterval(10000, function () {
     MySprite7 = sprites.create(img`
@@ -233,6 +235,7 @@ game.onUpdateInterval(10000, function () {
    `, SpriteKind.powerup2)
     MySprite7.setPosition(153, Math.randomRange(0, 120))
     MySprite7.setVelocity(-150, 0)
+    MySprite7.setFlag(SpriteFlag.AutoDestroy, true)
 })
 game.onUpdateInterval(500, function () {
     mySprite2 = sprites.create(img`
@@ -271,7 +274,7 @@ game.onUpdateInterval(500, function () {
    `, SpriteKind.Enemy)
     mySprite2.setPosition(153, Math.randomRange(0, 120))
     mySprite2.setVelocity(-75, 0)
-    mySprite2.setFlag(SpriteFlag.AutoDestroy, false)
+    mySprite2.setFlag(SpriteFlag.AutoDestroy, true)
 })
 game.onUpdateInterval(10000, function () {
     MySprite5 = sprites.create(img`
@@ -294,6 +297,7 @@ game.onUpdateInterval(10000, function () {
    `, SpriteKind.powerup)
     MySprite5.setPosition(153, Math.randomRange(0, 120))
     MySprite5.setVelocity(-225, 0)
+    MySprite5.setFlag(SpriteFlag.AutoDestroy, true)
 })
 game.onUpdateInterval(5000, function () {
     MySprite6 = sprites.create(img`
@@ -332,6 +336,7 @@ game.onUpdateInterval(5000, function () {
    `, SpriteKind.OmegaPowerup)
     MySprite6.setPosition(153, Math.randomRange(0, 120))
     MySprite6.setVelocity(-125, 0)
+    MySprite6.setFlag(SpriteFlag.AutoDestroy, true)
 })
 
 

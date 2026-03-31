@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<title>Arcade Games</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="theme-color" content="#000">
+	<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		:root {
+			--pink: #ff2d78;
+			--cyan: #00e5ff;
+			--yellow: #ffe14d;
+			--green: #39ff6e;
+			--blue: #4d6dff;
+		}
+
+		body {
+			background: #000;
+			color: #ccc;
+			font-family: 'Press Start 2P', monospace;
+			min-height: 100vh;
+			overflow-x: hidden;
+		}
+
+		#bg {
+			position: fixed;
+			inset: 0;
+			z-index: 0;
+		}
+
+		.scanlines {
+			position: fixed;
+			inset: 0;
+			z-index: 1;
+			background: repeating-linear-gradient(transparent 0px,
+					transparent 3px,
+					rgba(0, 0, 0, 0.12) 3px,
+					rgba(0, 0, 0, 0.12) 4px);
+			pointer-events: none;
+		}
+
+		.container {
+			position: relative;
+			z-index: 3;
+			max-width: 640px;
+			margin: 0 auto;
+			padding: 3rem 1.5rem 4rem;
+		}
+
+		.header {
+			text-align: center;
+			margin-bottom: 3rem;
+		}
+
+		.header-border {
+			border: 2px solid var(--cyan);
+			padding: 1.8rem 1rem;
+			position: relative;
+			box-shadow: 0 0 20px rgba(0, 229, 255, 0.25), inset 0 0 20px rgba(0, 229, 255, 0.08);
+			background: rgba(0, 0, 10, 0.75);
+		}
+
+		.header-border::before,
+		.header-border::after {
+			content: '+';
+			position: absolute;
+			font-size: 0.6rem;
+			color: var(--cyan);
+			line-height: 1;
+		}
+
+		.header-border::before {
+			top: -5px;
+			left: -2px;
+		}
+
+		.header-border::after {
+			top: -5px;
+			right: -2px;
+		}
+
+		h1 {
+			font-size: 1.8rem;
+			color: var(--cyan);
+			text-shadow:
+				0 0 10px rgba(0, 229, 255, 0.8),
+				0 0 30px rgba(0, 229, 255, 0.5),
+				0 0 60px rgba(0, 229, 255, 0.3);
+			margin-bottom: 0.9rem;
+			letter-spacing: 0.15em;
+		}
+
+		.subtitle {
+			font-size: 0.5rem;
+			color: #445;
+			letter-spacing: 0.2em;
+		}
+
+		.insert-coin {
+			display: block;
+			margin-top: 1.2rem;
+			font-size: 0.5rem;
+			color: var(--yellow);
+			text-shadow: 0 0 10px rgba(255, 225, 77, 0.6);
+			animation: blink 1s steps(1) infinite;
+		}
+
+		@keyframes blink {
+
+			0%,
+			55% {
+				opacity: 1;
+			}
+
+			56%,
+			100% {
+				opacity: 0;
+			}
+		}
+
+		.score-bar {
+			display: flex;
+			justify-content: center;
+			gap: 3rem;
+			margin-bottom: 2rem;
+			font-size: 0.5rem;
+		}
+
+		.score-label {
+			color: #555;
+		}
+
+		.score-value {
+			color: var(--yellow);
+			margin-top: 0.3rem;
+		}
+
+		.game-list {
+			display: flex;
+			flex-direction: column;
+			gap: 2px;
+		}
+
+		.game-card {
+			display: block;
+			text-decoration: none;
+			color: inherit;
+			border: 2px solid #1a1a2e;
+			padding: 1.2rem 1.4rem;
+			position: relative;
+			background: rgba(5, 5, 15, 0.85);
+			transition: all 0.15s ease;
+		}
+
+		.game-card:hover {
+			border-color: var(--card-color);
+			background: rgba(15, 15, 35, 0.9);
+			box-shadow:
+				0 0 12px color-mix(in srgb, var(--card-color) 30%, transparent),
+				inset 0 0 25px color-mix(in srgb, var(--card-color) 8%, transparent);
+		}
+
+		.card-row {
+			display: flex;
+			align-items: center;
+			gap: 1.2rem;
+		}
+
+		.game-num {
+			font-size: 1.2rem;
+			color: #222;
+			flex-shrink: 0;
+			width: 2.5rem;
+			text-align: center;
+			transition: color 0.15s;
+		}
+
+		.game-card:hover .game-num {
+			color: var(--card-color);
+			text-shadow: 0 0 10px color-mix(in srgb, var(--card-color) 50%, transparent);
+		}
+
+		.divider {
+			width: 2px;
+			height: 2.4rem;
+			background: #1a1a2e;
+			flex-shrink: 0;
+			transition: background 0.15s;
+		}
+
+		.game-card:hover .divider {
+			background: var(--card-color);
+			box-shadow: 0 0 6px color-mix(in srgb, var(--card-color) 50%, transparent);
+		}
+
+		.card-text {
+			flex: 1;
+		}
+
+		.game-title {
+			font-size: 0.75rem;
+			color: #ddd;
+			margin-bottom: 0.4rem;
+			letter-spacing: 0.05em;
+			transition: color 0.15s;
+		}
+
+		.game-card:hover .game-title {
+			color: #fff;
+			text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+		}
+
+		.game-desc {
+			font-size: 0.45rem;
+			color: #556;
+			line-height: 1.8;
+		}
+
+		.play-tag {
+			flex-shrink: 0;
+			font-size: 0.45rem;
+			color: #333;
+			border: 1px solid #222;
+			padding: 0.4rem 0.6rem;
+			letter-spacing: 0.1em;
+			transition: all 0.15s;
+		}
+
+		.game-card:hover .play-tag {
+			color: var(--card-color);
+			border-color: var(--card-color);
+			box-shadow: 0 0 10px color-mix(in srgb, var(--card-color) 30%, transparent);
+		}
+
+		.footer {
+			text-align: center;
+			margin-top: 3rem;
+			padding-top: 1.5rem;
+			border-top: 1px solid #111;
+			font-size: 0.45rem;
+			color: #333;
+		}
+
+		.footer a {
+			color: #555;
+			text-decoration: none;
+		}
+
+		.footer a:hover {
+			color: var(--cyan);
+			text-shadow: 0 0 6px rgba(0, 229, 255, 0.4);
+		}
+
+		@media (max-width: 500px) {
+			h1 {
+				font-size: 1.2rem;
+			}
+
+			.game-num {
+				display: none;
+			}
+
+			.divider {
+				display: none;
+			}
+
+			.game-card {
+				padding: 1rem;
+			}
+
+			.score-bar {
+				gap: 1.5rem;
+			}
+		}
+	</style>
+</head>
+
+<body>
+	<canvas id="bg"></canvas>
+	<div class="scanlines"></div>
+
+	<div class="container">
+		<div class="header">
+			<div class="header-border">
+				<h1>ARCADE</h1>
+				<p class="subtitle">MAKECODE ARCADE V1.8.22</p>
+				<span class="insert-coin">INSERT COIN TO CONTINUE</span>
+			</div>
+		</div>
+
+		<div class="score-bar">
+			<div style="text-align:center">
+				<div class="score-label">GAMES</div>
+				<div class="score-value">02</div>
+			</div>
+			<div style="text-align:center">
+				<div class="score-label">ENGINE</div>
+				<div class="score-value">PXT</div>
+			</div>
+			<div style="text-align:center">
+				<div class="score-label">STATUS</div>
+				<div class="score-value">RDY</div>
+			</div>
+		</div>
+
+		<div class="game-list">
+			<a href="./Collect/" class="game-card" style="--card-color: var(--green);">
+				<div class="card-row">
+					<div class="game-num">01</div>
+					<div class="divider"></div>
+					<div class="card-text">
+						<div class="game-title">COLLECT</div>
+						<div class="game-desc">GRAB FOOD BEFORE TIME RUNS OUT. REGULAR = 25 PTS / SUPER = 50 PTS</div>
+					</div>
+					<div class="play-tag">START</div>
+				</div>
+			</a>
+
+			<a href="./Galaga/" class="game-card" style="--card-color: var(--pink);">
+				<div class="card-row">
+					<div class="game-num">02</div>
+					<div class="divider"></div>
+					<div class="card-text">
+						<div class="game-title">GALAGA</div>
+						<div class="game-desc">BLAST THROUGH WAVES OF ENEMIES IN THIS SPACE SHOOTER</div>
+					</div>
+					<div class="play-tag">START</div>
+				</div>
+			</a>
+
+			<!-- add more games:
+            <a href="./GameName/" class="game-card" style="--card-color: var(--cyan);">
+                <div class="card-row">
+                    <div class="game-num">03</div>
+                    <div class="divider"></div>
+                    <div class="card-text">
+                        <div class="game-title">GAME NAME</div>
+                        <div class="game-desc">DESCRIPTION HERE</div>
+                    </div>
+                    <div class="play-tag">START</div>
+                </div>
+            </a>
+            -->
+		</div>
+
+		<div class="footer">
+			BUILT WITH <a href="https://arcade.makecode.com/">MAKECODE ARCADE</a>
+		</div>
+	</div>
+
+	<script>
+		(function () {
+			var c = document.getElementById('bg');
+			var ctx = c.getContext('2d');
+			var W, H, horizon;
+
+			var stars = [];
+			var gridScroll = 0;
+			var invaders = [];
+			var lasers = [];
+			var explosions = [];
+			var laserTimer = 0;
+
+			var colors = ['#ff2d78', '#00e5ff', '#39ff6e', '#ffe14d', '#4d6dff', '#c084fc'];
+
+			var invaderShapes = [
+				[[0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0],
+				[0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0],
+				[0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0],
+				[0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0],
+				[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+				[1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1],
+				[1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1],
+				[0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0]],
+				[[0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
+				[0, 0, 0, 1, 1, 1, 1, 0, 0, 0],
+				[0, 0, 1, 1, 1, 1, 1, 1, 0, 0],
+				[0, 1, 1, 0, 1, 1, 0, 1, 1, 0],
+				[0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+				[0, 0, 0, 1, 0, 0, 1, 0, 0, 0],
+				[0, 0, 1, 0, 1, 1, 0, 1, 0, 0],
+				[0, 1, 0, 1, 0, 0, 1, 0, 1, 0]],
+				[[0, 0, 0, 0, 1, 0, 0, 0, 0],
+				[0, 0, 0, 1, 1, 1, 0, 0, 0],
+				[0, 0, 0, 1, 1, 1, 0, 0, 0],
+				[0, 1, 1, 1, 1, 1, 1, 1, 0],
+				[1, 1, 1, 1, 1, 1, 1, 1, 1],
+				[1, 1, 1, 1, 1, 1, 1, 1, 1],
+				[0, 1, 0, 0, 0, 0, 0, 1, 0]]
+			];
+
+			function resize() {
+				W = c.width = window.innerWidth;
+				H = c.height = window.innerHeight;
+				horizon = H * 0.52;
+				stars = [];
+				for (var i = 0; i < 100; i++) {
+					stars.push({
+						x: Math.random() * W,
+						y: Math.random() * horizon,
+						size: Math.random() < 0.1 ? 2 : 1,
+						twinkle: Math.random() * 6.28,
+						speed: Math.random() * 0.03 + 0.01
+					});
+				}
+			}
+
+			function spawnInvader() {
+				var shape = invaderShapes[Math.floor(Math.random() * invaderShapes.length)];
+				var dir = Math.random() < 0.5 ? 1 : -1;
+				var px = Math.floor(Math.random() * 3) + 3;
+				invaders.push({
+					shape: shape,
+					x: dir === 1 ? -shape[0].length * px - 20 : W + 20,
+					y: Math.random() * (horizon - 80) + 20,
+					dir: dir,
+					speed: Math.random() * 0.8 + 0.4,
+					px: px,
+					color: colors[Math.floor(Math.random() * colors.length)],
+					bob: Math.random() * 6.28,
+					bobAmp: Math.random() * 6 + 3
+				});
+			}
+
+			function spawnExplosion(x, y, color) {
+				for (var i = 0; i < 12; i++) {
+					var angle = Math.random() * 6.28;
+					var spd = Math.random() * 2 + 1;
+					explosions.push({
+						x: x, y: y,
+						vx: Math.cos(angle) * spd,
+						vy: Math.sin(angle) * spd,
+						life: 1,
+						decay: Math.random() * 0.02 + 0.015,
+						size: Math.floor(Math.random() * 3) + 2,
+						color: color
+					});
+				}
+			}
+
+			function spawnLaser() {
+				var fromLeft = Math.random() < 0.5;
+				lasers.push({
+					x: fromLeft ? -60 : W + 60,
+					y: Math.random() * horizon * 0.7 + horizon * 0.1,
+					dir: fromLeft ? 1 : -1,
+					speed: Math.random() * 5 + 8,
+					len: Math.random() * 50 + 30,
+					color: colors[Math.floor(Math.random() * colors.length)]
+				});
+			}
+
+			// init
+			function init() {
+				for (var i = 0; i < 5; i++) {
+					spawnInvader();
+					invaders[i].x = Math.random() * W * 0.8 + W * 0.1;
+				}
+			}
+
+			function drawSky() {
+				var g = ctx.createLinearGradient(0, 0, 0, horizon);
+				g.addColorStop(0, '#02000a');
+				g.addColorStop(0.6, '#0a0028');
+				g.addColorStop(1, '#1a004a');
+				ctx.fillStyle = g;
+				ctx.fillRect(0, 0, W, horizon);
+			}
+
+			function drawSun() {
+				var cx = W / 2;
+				var cy = horizon;
+				var r = Math.min(W, H) * 0.12;
+
+				// sun glow
+				var g = ctx.createRadialGradient(cx, cy, 0, cx, cy, r * 2.5);
+				g.addColorStop(0, 'rgba(255, 45, 120, 0.3)');
+				g.addColorStop(0.3, 'rgba(255, 120, 50, 0.15)');
+				g.addColorStop(1, 'transparent');
+				ctx.fillStyle = g;
+				ctx.fillRect(cx - r * 3, cy - r * 3, r * 6, r * 3);
+
+				// sun body — striped
+				ctx.save();
+				ctx.beginPath();
+				ctx.arc(cx, cy, r, Math.PI, 0);
+				ctx.clip();
+
+				var sunG = ctx.createLinearGradient(cx, cy - r, cx, cy);
+				sunG.addColorStop(0, '#ffe14d');
+				sunG.addColorStop(0.4, '#ff8844');
+				sunG.addColorStop(0.7, '#ff2d78');
+				sunG.addColorStop(1, '#cc0066');
+				ctx.fillStyle = sunG;
+				ctx.fillRect(cx - r, cy - r, r * 2, r);
+
+				// horizontal stripe cutouts
+				ctx.fillStyle = 'rgba(0,0,0,0.9)';
+				var stripeY = cy - r * 0.05;
+				var stripeH = r * 0.06;
+				var gap = r * 0.04;
+				for (var i = 0; i < 8; i++) {
+					ctx.fillRect(cx - r, stripeY, r * 2, stripeH);
+					stripeY += stripeH + gap;
+					stripeH += r * 0.012;
+					gap += r * 0.005;
+				}
+
+				ctx.restore();
+			}
+
+			function drawFloor() {
+				var g = ctx.createLinearGradient(0, horizon, 0, H);
+				g.addColorStop(0, '#12003a');
+				g.addColorStop(1, '#050012');
+				ctx.fillStyle = g;
+				ctx.fillRect(0, horizon, W, H - horizon);
+			}
+
+			function drawGrid() {
+				gridScroll = (gridScroll + 2) % 40;
+
+				// horizontal lines
+				var count = 25;
+				for (var i = 0; i <= count; i++) {
+					var t = (i + gridScroll / 40) / count;
+					t = t * t;
+					var y = horizon + t * (H - horizon);
+					var a = 0.15 + t * 0.5;
+					ctx.strokeStyle = 'rgba(255, 45, 120,' + a + ')';
+					ctx.lineWidth = t < 0.3 ? 1 : 1.5;
+					ctx.beginPath();
+					ctx.moveTo(0, y);
+					ctx.lineTo(W, y);
+					ctx.stroke();
+				}
+
+				// vertical converging lines
+				var vx = W / 2;
+				var vCount = 20;
+				for (var i = -vCount; i <= vCount; i++) {
+					var baseX = vx + i * (W / vCount) * 1.8;
+					var a2 = 0.35 - Math.abs(i / vCount) * 0.25;
+					if (a2 < 0.03) continue;
+					ctx.strokeStyle = 'rgba(255, 45, 120,' + a2 + ')';
+					ctx.lineWidth = 1;
+					ctx.beginPath();
+					ctx.moveTo(vx, horizon);
+					ctx.lineTo(baseX, H);
+					ctx.stroke();
+				}
+
+				// horizon glow line
+				ctx.strokeStyle = '#ff2d78';
+				ctx.lineWidth = 2;
+				ctx.shadowColor = '#ff2d78';
+				ctx.shadowBlur = 15;
+				ctx.beginPath();
+				ctx.moveTo(0, horizon);
+				ctx.lineTo(W, horizon);
+				ctx.stroke();
+				ctx.shadowBlur = 0;
+			}
+
+			function drawStars() {
+				for (var i = 0; i < stars.length; i++) {
+					var s = stars[i];
+					s.twinkle += s.speed;
+					var a = 0.4 + Math.sin(s.twinkle) * 0.4;
+					ctx.fillStyle = 'rgba(255,255,255,' + a + ')';
+					ctx.fillRect(Math.floor(s.x), Math.floor(s.y), s.size, s.size);
+				}
+			}
+
+			function drawInvaders() {
+				for (var i = invaders.length - 1; i >= 0; i--) {
+					var inv = invaders[i];
+					inv.x += inv.speed * inv.dir;
+					inv.bob += 0.025;
+					var drawY = inv.y + Math.sin(inv.bob) * inv.bobAmp;
+
+					var totalW = inv.shape[0].length * inv.px;
+					if ((inv.dir === 1 && inv.x > W + 40) || (inv.dir === -1 && inv.x < -totalW - 40)) {
+						invaders.splice(i, 1);
+						continue;
+					}
+
+					// glow behind invader
+					ctx.fillStyle = inv.color;
+					ctx.globalAlpha = 0.06;
+					ctx.fillRect(inv.x - 4, drawY - 4, totalW + 8, inv.shape.length * inv.px + 8);
+
+					// draw pixels
+					ctx.globalAlpha = 0.6;
+					for (var row = 0; row < inv.shape.length; row++) {
+						for (var col = 0; col < inv.shape[row].length; col++) {
+							if (inv.shape[row][col]) {
+								ctx.fillRect(
+									Math.floor(inv.x + col * inv.px),
+									Math.floor(drawY + row * inv.px),
+									inv.px, inv.px
+								);
+							}
+						}
+					}
+					ctx.globalAlpha = 1;
+				}
+
+				if (Math.random() < 0.012 && invaders.length < 8) spawnInvader();
+			}
+
+			function drawLasers() {
+				laserTimer++;
+				if (laserTimer > 40 && Math.random() < 0.06) {
+					spawnLaser();
+					laserTimer = 0;
+				}
+
+				for (var i = lasers.length - 1; i >= 0; i--) {
+					var l = lasers[i];
+					l.x += l.speed * l.dir;
+
+					if ((l.dir === 1 && l.x - l.len > W) || (l.dir === -1 && l.x + l.len < 0)) {
+						// explosion at exit? nah, at random invader hit
+						lasers.splice(i, 1);
+						continue;
+					}
+
+					// check invader hit
+					for (var j = invaders.length - 1; j >= 0; j--) {
+						var inv = invaders[j];
+						var iw = inv.shape[0].length * inv.px;
+						var ih = inv.shape.length * inv.px;
+						if (l.x > inv.x && l.x < inv.x + iw && l.y > inv.y && l.y < inv.y + ih) {
+							spawnExplosion(inv.x + iw / 2, inv.y + ih / 2, inv.color);
+							invaders.splice(j, 1);
+							lasers.splice(i, 1);
+							break;
+						}
+					}
+
+					if (i >= lasers.length) continue;
+					l = lasers[i];
+
+					// draw laser
+					ctx.save();
+					ctx.strokeStyle = l.color;
+					ctx.lineWidth = 3;
+					ctx.shadowColor = l.color;
+					ctx.shadowBlur = 12;
+					ctx.globalAlpha = 0.9;
+					ctx.beginPath();
+					ctx.moveTo(l.x, l.y);
+					ctx.lineTo(l.x - l.len * l.dir, l.y);
+					ctx.stroke();
+					// bright core
+					ctx.strokeStyle = '#fff';
+					ctx.lineWidth = 1;
+					ctx.shadowBlur = 0;
+					ctx.beginPath();
+					ctx.moveTo(l.x, l.y);
+					ctx.lineTo(l.x - l.len * 0.6 * l.dir, l.y);
+					ctx.stroke();
+					ctx.restore();
+				}
+			}
+
+			function drawExplosions() {
+				for (var i = explosions.length - 1; i >= 0; i--) {
+					var p = explosions[i];
+					p.x += p.vx;
+					p.y += p.vy;
+					p.life -= p.decay;
+
+					if (p.life <= 0) {
+						explosions.splice(i, 1);
+						continue;
+					}
+
+					ctx.fillStyle = p.color;
+					ctx.globalAlpha = p.life;
+					ctx.fillRect(Math.floor(p.x), Math.floor(p.y), p.size, p.size);
+				}
+				ctx.globalAlpha = 1;
+			}
+
+			function frame() {
+				ctx.clearRect(0, 0, W, H);
+				drawSky();
+				drawSun();
+				drawFloor();
+				drawStars();
+				drawInvaders();
+				drawLasers();
+				drawExplosions();
+				drawGrid();
+				requestAnimationFrame(frame);
+			}
+
+			window.addEventListener('resize', resize);
+			resize();
+			init();
+			frame();
+		})();
+	</script>
+</body>
+
+</html>
