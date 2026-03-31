@@ -10,7 +10,13 @@ function makeCodeRun(options) {
     var simState = {}
     var simStateChanged = false
     var started = false;
-    var meta = undefined;
+    var meta = {
+        simUrl: "./simulator/index.html",
+        cdnUrl: "",
+        version: "",
+        target: "arcade",
+        targetVersion: "1.8.22"
+    };
 
     // hide scrollbar
     window.scrollTo(0, 1);
@@ -18,27 +24,26 @@ function makeCodeRun(options) {
     initSimState();
     fetchCode();
 
-    // helpers
     function fetchCode() {
         sendReq(options.js, function (c, status) {
             if (status != 200)
                 return;
             code = c;
-            // find metadata
+            // try to extract metadata from binary, but don't crash if missing
             code.replace(/^\/\/\s+meta=([^\n]+)\n/m, function (m, metasrc) {
-                meta = JSON.parse(metasrc);
+                try {
+                    var parsed = JSON.parse(metasrc);
+                    meta.cdnUrl = parsed.cdnUrl || meta.cdnUrl;
+                    meta.target = parsed.target || meta.target;
+                    meta.targetVersion = parsed.targetVersion || meta.targetVersion;
+                    meta.version = parsed.version || meta.version;
+                } catch (e) {
+                    console.log("Failed to parse meta, using defaults");
+                }
             })
-            var vel = document.getElementById("version");
-            if (meta.version && meta.repo && vel) {
-                var ap = document.createElement("a");
-                ap.download = "arcade.uf2";
-                ap.href = "https://github.com/" + meta.repo + "/releases/download/v" + meta.version + "/arcade.uf2";
-                ap.innerText = "v" + meta.version;
-                vel.appendChild(ap);
-            }
-            // load simulator with correct version
+            // always load local simulator
             document.getElementById("simframe")
-                .setAttribute("src", meta.simUrl);
+                .setAttribute("src", "./simulator/index.html");
             initFullScreen();
         })
     }
@@ -105,21 +110,20 @@ function makeCodeRun(options) {
                     const data = JSON.parse(str)
                     handler(data);
                 } catch (e) {
-                    console.log(`invalid simmessage`)
+                    console.log("invalid simmessage")
                     console.log(e)
                 }
             }
-        }            
+        }
     }, false);
 
-    // helpers
     function uint8ArrayToString(input) {
         let len = input.length;
         let res = ""
         for (let i = 0; i < len; ++i)
             res += String.fromCharCode(input[i]);
         return res;
-    }            
+    }
 
     function setState(st) {
         var r = document.getElementById("root");
@@ -130,7 +134,7 @@ function makeCodeRun(options) {
     function postMessage(msg) {
         const frame = document.getElementById("simframe");
         if (frame)
-            frame.contentWindow.postMessage(msg, meta.simUrl);
+            frame.contentWindow.postMessage(msg, "*");
     }
 
     function sendReq(url, cb) {
@@ -156,12 +160,12 @@ function makeCodeRun(options) {
             simStateChanged = false
         }, 200)
     }
-    
+
     function initFullScreen() {
         var sim = document.getElementById("simframe");
         var fs = document.getElementById("fullscreen");
         if (fs && sim.requestFullscreen) {
-            fs.onclick = function() { sim.requestFullscreen(); }
+            fs.onclick = function () { sim.requestFullscreen(); }
         } else if (fs) {
             fs.remove();
         }

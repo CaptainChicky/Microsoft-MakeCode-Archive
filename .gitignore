@@ -1,11 +1,7 @@
-# MakeCode
-built
-node_modules
-yotta_modules
-yotta_targets
-pxt_modules
-_site
-*.db
-*.tgz
-.header.json
-.simstate.json
+node_modules/
+built/
+.DS_Store
+pxt_modules/
+assets/binary.js
+package-lock.json
+package.json
