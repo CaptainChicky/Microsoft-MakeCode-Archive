@@ -164,8 +164,9 @@ Rename-Item .\node_modules\pxt-arcade pxt-arcade@1.8.22        # Windows PowerSh
 pxt install
 
 # Compile the project using cloud compilation (cloud flag offloads ARM compilation to MS's servers)
-# can be omitted if you only need the simulator for browser stuff, or not if you don't feel like it lol
+# cloud flag can be omitted if you only need the simulator for browser stuff, or not if you don't feel like it lol
 pxt build --cloud
+# pxt build <-- ommitted version compiles locally
 
 # Copy the compiled output to the project root for easier access
 cp built/debug/binary.js .
