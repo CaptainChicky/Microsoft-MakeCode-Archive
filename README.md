@@ -75,7 +75,38 @@ The original MakeCode project import was a genuine clusterfuck of a mess lol.
         └── loader.js
 </code></pre>
 </details><br>
-highkey spent like ~4-5 hours figuring everything out, including what I could delete, what I could optimize/polish etc, and ended up with the current repo structure. As it turns out, most of this garbage that makecode autogenerates was indeed garbage :)) I could explain what I figured out but ngl its genunly not worthwhile since 99% of it is template garbage so w/e idc
+
+highkey spent like ~4-5 hours figuring everything out, including what I could delete, what I could optimize/polish etc, and ended up with the current repo structure. As it turns out, most of this garbage that makecode autogenerates was indeed garbage :)) If you want to make your own archive, I can detail what I did as follows. You are to delete everything <b>EXCEPT</b> three files, namely `./assets/js/loader.js`, `pxt.json` and `main.ts`, which are the source code and the project config file that the compiler needs. You can also keep `assets.json` if you want to use custom assets, but I didn't use any so I just deleted it. Basically for a general project with nonexotic configs, you only need the source, config, and any asset config/assets. You then need to arrange the files in the same structure as the current repo, make/copy the files you don't have (html, simulator blob mirror, gitignore, etc). Then make key changes on a few things. 
+
+Noted is in loader, parameters in the `makeCodeRun` function were adjusted to reflect the current structure (such as removing `cdnUrl` etc), and in addition I've also changed `document.getElementById("simframe").setAttribute("src", "./simulator/index.html");` to `document.getElementById("simframe").setAttribute("src", options.simUrl || "./simulator/index.html");` to be able to pass a custom `simUrl`, but nothing really came out of this and it was harmless to keep. 
+
+`pxt.json` needs stripping from 
+```json
+"files": ["main.blocks", "main.ts", "README.md"]
+"testFiles": ["test.ts"]
+"targetVersions": {
+    "branch": "v0.14.9",
+    "tag": "v0.14.9",
+    "commits": "https://github.com/microsoft/pxt-arcade/commits/...",
+    "target": "1.8.22",
+    "pxt": "5.21.14",
+    "targetId": "arcade"
+}
+"preferredEditor": "blocksprj"
+```
+to
+```json
+"files": ["main.ts"]
+"testFiles": []
+"targetVersions": {
+    "target": "1.8.22",
+    "targetId": "arcade"
+}
+"preferredEditor": "tsprj"
+```
+which is the most optimal version with all uneccessary files and configs removed (i.e. you are only keeping the `main.ts`). 
+
+With this setup, you have finished the project cleanup and restructuring. You can then compile the game using the MakeCode CLI, which will generate the `binary.js` that you can then copy to the appropriate folder in the current repo structure.
 
 ### In this current repo, the structure is as follows:<br>
 1. `game.html` is the single shared game player. It reads the game name from the URL (`?g=Collect`), fetches that game's `binary.js` as raw text, then boots the simulator in a sandboxed iframe. After loading, it rewrites the URL to a clean path (e.g. `/Collect/`) using the History API.

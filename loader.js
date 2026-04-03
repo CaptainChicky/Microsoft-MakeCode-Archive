@@ -42,8 +42,7 @@ function makeCodeRun(options) {
                 }
             })
             // load simulator from provided path or default
-            document.getElementById("simframe")
-                .setAttribute("src", options.simUrl || "./simulator/index.html");
+            document.getElementById("simframe").setAttribute("src", options.simUrl || "./simulator/index.html");
             initFullScreen();
         })
     }
