@@ -80,7 +80,7 @@ highkey spent like ~4-5 hours figuring everything out, including what I could de
 
 Noted is in loader, parameters in the `makeCodeRun` function were adjusted to reflect the current structure (such as removing `cdnUrl` etc), and in addition I've also changed `document.getElementById("simframe").setAttribute("src", "./simulator/index.html");` to `document.getElementById("simframe").setAttribute("src", options.simUrl || "./simulator/index.html");` to be able to pass a custom `simUrl`, but nothing really came out of this and it was harmless to keep. 
 
-`pxt.json` needs stripping from 
+`pxt.json` needs stripping from (as an example, please double check your own json file since it may differ and follow general guidelines from my 3 games as an example)
 ```json
 "files": ["main.blocks", "main.ts", "README.md"]
 "testFiles": ["test.ts"]
