@@ -6,9 +6,9 @@ The code is written extremely noobishly, but since this is an archive, changing 
 
 | Game | Description | Play |
 |------|-------------|------|
-| **Collect** | Grab food before time runs out; regular = 25 pts, superfood = 50. | [Play](https://theaviary.me/Microsoft-MakeCode-Archive/Collect/) |
-| **Galaga** | A side-scrolling space shooter with meteors/asteroids + power-ups. | [Play](https://theaviary.me/Microsoft-MakeCode-Archive/Galaga/) |
-| **Maze** | Guide turtle through a maze. Dodge plastic bags, eat straws, sksksksk and i oop. | [Play](https://theaviary.me/Microsoft-MakeCode-Archive/Maze/) |
+| **Collect** | Grab food before time runs out; regular = 25 pts, superfood = 50. | [Play](https://captainchicky.github.io/Microsoft-MakeCode-Archive/Collect/) |
+| **Galaga** | A side-scrolling space shooter with meteors/asteroids + power-ups. | [Play](https://captainchicky.github.io/Microsoft-MakeCode-Archive/Galaga/) |
+| **Maze** | Guide turtle through a maze. Dodge plastic bags, eat straws, sksksksk and i oop. | [Play](https://captainchicky.github.io/Microsoft-MakeCode-Archive/Maze/) |
 
 ## Project structure
 
